@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Usuario - Servidor Express</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+            margin-bottom: 30px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        nav a:hover {
+            color: #ddd;
+        }
+        
+        .page-header {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        .user-profile {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .user-sidebar {
+            flex: 1;
+            min-width: 300px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .user-header {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #666;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+        }
+        
+        .user-name {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-role {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .role-admin {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        
+        .role-user {
+            background-color: #28a745;
+            color: #fff;
+        }
+        
+        .user-info {
+            padding: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .user-content {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .content-section {
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: #fff;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: #0069d9;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .form-check-input {
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2>Express + EJS</h2>
+            </div>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/users">Usuarios</a></li>
+                <li><a href="/api/users">API</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1>Detalle de Usuario</h1>
+            <a href="/users" class="btn btn-secondary">Volver a la lista</a>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-sidebar">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        <%= user.name.charAt(0).toUpperCase() %>
+                    </div>
+                    <h2 class="user-name"><%= user.name %></h2>
+                    <span class="user-role <%= user.role === 'admin' ? 'role-admin' : 'role-user' %>">
+                        <%= user.role.toUpperCase() %>
+                    </span>
+                </div>
+                <div class="user-info">
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value"><%= user.email %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estado</span>
+                        <span class="info-value"><%= user.active ? 'Activo' : 'Inactivo' %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de Creación</span>
+                        <span class="info-value"><%= new Date(user.createdAt).toLocaleDateString() %></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ID</span>
+                        <span class="info-value"><%= user._id %></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-content">
+                <div class="content-section">
+                    <h3 class="section-title">Editar Usuario</h3>
+                    <form action="/users/<%= user._id %>?_method=PUT" method="POST">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Nombre</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="role">Rol</label>
+                            <select class="form-control" id="role" name="role">
+                                <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>Usuario</option>
+                                <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Administrador</option>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="active" name="active" <%= user.active ? 'checked' : '' %>>
+                            <label class="form-check-label" for="active">Usuario Activo</label>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <a href="/users" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">Acciones</h3>
+                    <div class="btn-group">
+                        <form action="/users/<%= user._id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Eliminar Usuario</button>
+                        </form>
+                        <a href="/users/reset-password/<%= user._id %>" class="btn btn-secondary">Restablecer Contraseña</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Servidor Express con EJS - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>
