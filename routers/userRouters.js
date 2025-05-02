@@ -9,11 +9,11 @@ const userController = require('../controllers/userController');
 const userControllerTest = require('../controllers/userControllerTest');
 
 // Definimos las rutas del controlador de prueba
-router.get('test/', userControllerTest.getAllUsers);
-router.get('test/:id', userControllerTest.getUser);
-router.post('test/', userControllerTest.createUser);
-router.put('test/:id', userControllerTest.updateUser);
-router.delete('test/:id', userControllerTest.deleteUser);
+router.get('/test/', userControllerTest.getAllUsers);
+router.get('/test/:id', userControllerTest.getUser);
+router.post('/test/', userControllerTest.createUser);
+router.put('/test/:id', userControllerTest.updateUser);
+router.delete('/test/:id', userControllerTest.deleteUser);
 
 
 // Definimos las rutas
