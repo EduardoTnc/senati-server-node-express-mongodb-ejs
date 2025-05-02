@@ -10,8 +10,12 @@ const connectDB = require('./config/database');
 const morgan = require('morgan');
 // Importamos el middleware de login
 const userLogin = require('./middlewares/userLogin');
-// Importamos el router de usuarios
+// Importamos los routers
 const userRouter = require('./routers/userRouters');
+const clienteRouter = require('./routers/clienteRouters');
+const productoRouter = require('./routers/productoRouters');
+const pedidoRouter = require('./routers/pedidoRouters');
+const repartidorRouter = require('./routers/repartidorRouters');
 // Importamos el motor de plantillas EJS
 const path = require('path');
 // Importamos el modelo de usuarios
@@ -56,8 +60,12 @@ connectDB();
 // RUTAS
 // ==========================================
 
-// Montamos el router de usuarios en la ruta /users
+// Montamos los routers en sus respectivas rutas
 app.use('/users', userRouter);
+app.use('/api/clientes', clienteRouter);
+app.use('/api/productos', productoRouter);
+app.use('/api/pedidos', pedidoRouter);
+app.use('/api/repartidores', repartidorRouter);
 
 // Definimos la ruta principal con el middleware de login
 app.get('/', userLogin, (req, res) => {
