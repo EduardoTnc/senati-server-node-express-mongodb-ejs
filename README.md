@@ -64,13 +64,31 @@ basic-server/
 ├── config/
 │   └── database.js             # Configuración de MongoDB
 ├── controllers/
-│   └── userController.js       # Controladores para usuarios
+│   ├── userController.js       # Controlador de usuarios
+│   ├── clienteController.js    # Controlador de clientes
+│   ├── productoController.js   # Controlador de productos
+│   ├── pedidoController.js     # Controlador de pedidos
+│   └── repartidorController.js # Controlador de repartidores
 ├── middlewares/
 │   └── userLogin.js            # Middleware de autenticación
 ├── models/
-│   └── userModel.js            # Modelos de datos (MongoDB/Mongoose)
+│   ├── userModel.js            # Modelo de usuarios
+│   ├── clienteModel.js         # Modelo de clientes
+│   ├── productoModel.js        # Modelo de productos
+│   ├── pedidoModel.js          # Modelo de pedidos
+│   └── repartidorModel.js      # Modelo de repartidores
 ├── routers/
-│   └── userRouters.js          # Rutas de la API
+│   ├── userRouters.js          # Rutas de usuarios
+│   ├── clienteRouters.js       # Rutas de clientes
+│   ├── productoRouters.js      # Rutas de productos
+│   ├── pedidoRouters.js        # Rutas de pedidos
+│   └── repartidorRouters.js    # Rutas de repartidores
+├── services/                    # Capa de servicios
+│   ├── UserService.js          # Servicio de usuarios
+│   ├── ClienteService.js       # Servicio de clientes
+│   ├── ProductoService.js      # Servicio de productos
+│   ├── PedidoService.js        # Servicio de pedidos
+│   └── RepartidorService.js    # Servicio de repartidores
 ├── view/                       # Vistas EJS
 │   ├── index.ejs               # Página principal
 │   └── pages/                  # Páginas específicas
