@@ -9,7 +9,7 @@ Este proyecto es un servidor completo desarrollado con Node.js, Express.js, Mong
 - Motor de plantillas EJS para vistas
 - Middleware de autenticación
 - Logging con Morgan
-- API RESTful para usuarios
+- APIs RESTful para usuarios, clientes, productos, pedidos y repartidores
 - Interfaz web con estilos CSS
 - Scripts para desarrollo y producción
 
@@ -87,7 +87,12 @@ basic-server/
 
 ## Rutas Disponibles
 
-### API REST
+### Interfaz Web
+
+- `/` - Página principal
+- `/pages/users` - Lista de usuarios
+
+### API REST de Usuarios
 
 - `GET /users` - Obtener todos los usuarios
 - `GET /users/:id` - Obtener un usuario específico
@@ -95,11 +100,394 @@ basic-server/
 - `PUT /users/:id` - Actualizar un usuario existente
 - `DELETE /users/:id` - Eliminar un usuario
 
-### Interfaz Web
+### API REST de Clientes
 
-- `/` - Página principal
-- `/pages/users` - Lista de usuarios
-- `/users/:id` - Detalle de un usuario
+- `GET /api/clientes` - Obtener todos los clientes
+- `GET /api/clientes/:id` - Obtener un cliente específico
+- `POST /api/clientes` - Crear un nuevo cliente
+- `PUT /api/clientes/:id` - Actualizar un cliente existente
+- `DELETE /api/clientes/:id` - Eliminar un cliente
+- `POST /api/clientes/:id/direcciones` - Agregar dirección a un cliente
+- `PUT /api/clientes/:id/direcciones/:direccionId` - Actualizar dirección de un cliente
+- `DELETE /api/clientes/:id/direcciones/:direccionId` - Eliminar dirección de un cliente
+
+### API REST de Productos
+
+- `GET /api/productos` - Obtener todos los productos
+- `GET /api/productos/:id` - Obtener un producto específico
+- `POST /api/productos` - Crear un nuevo producto
+- `PUT /api/productos/:id` - Actualizar un producto existente
+- `DELETE /api/productos/:id` - Eliminar un producto
+- `GET /api/productos/categoria/:categoria` - Obtener productos por categoría
+- `PATCH /api/productos/:id/disponibilidad` - Cambiar disponibilidad de un producto
+- `PATCH /api/productos/:id/destacado` - Cambiar estado destacado de un producto
+
+### API REST de Pedidos
+
+- `GET /api/pedidos` - Obtener todos los pedidos
+- `GET /api/pedidos/:id` - Obtener un pedido específico
+- `POST /api/pedidos` - Crear un nuevo pedido
+- `PUT /api/pedidos/:id` - Actualizar un pedido existente
+- `GET /api/pedidos/cliente/:clienteId` - Obtener pedidos de un cliente
+- `GET /api/pedidos/repartidor/:repartidorId` - Obtener pedidos de un repartidor
+- `GET /api/pedidos/estado/:estado` - Obtener pedidos por estado
+- `PATCH /api/pedidos/:id/estado` - Actualizar estado de un pedido
+- `PATCH /api/pedidos/:id/repartidor` - Asignar repartidor a un pedido
+- `PATCH /api/pedidos/:id/calificacion` - Calificar un pedido
+- `PATCH /api/pedidos/:id/cancelar` - Cancelar un pedido
+
+### API REST de Repartidores
+
+- `GET /api/repartidores` - Obtener todos los repartidores
+- `GET /api/repartidores/:id` - Obtener un repartidor específico
+- `POST /api/repartidores` - Crear un nuevo repartidor
+- `PUT /api/repartidores/:id` - Actualizar un repartidor existente
+- `DELETE /api/repartidores/:id` - Eliminar un repartidor
+- `GET /api/repartidores/disponibles` - Obtener repartidores disponibles
+- `PATCH /api/repartidores/:id/disponibilidad` - Actualizar disponibilidad de un repartidor
+- `PATCH /api/repartidores/:id/ubicacion` - Actualizar ubicación de un repartidor
+- `PATCH /api/repartidores/:id/zonas` - Actualizar zonas de cobertura de un repartidor
+- `GET /api/repartidores/:id/estadisticas` - Obtener estadísticas de un repartidor
+
+## Documentación de APIs
+
+A continuación se detallan ejemplos de uso para cada una de las APIs disponibles en el sistema.
+
+### Usuarios
+
+#### Obtener todos los usuarios
+
+```http
+GET /users
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "_id": "60d21b4667d0d8992e610c85",
+    "nombre": "Juan Pérez",
+    "email": "juan@example.com",
+    "rol": "admin",
+    "createdAt": "2023-05-01T15:30:45.123Z",
+    "updatedAt": "2023-05-01T15:30:45.123Z"
+  },
+  {
+    "_id": "60d21b4667d0d8992e610c86",
+    "nombre": "María López",
+    "email": "maria@example.com",
+    "rol": "usuario",
+    "createdAt": "2023-05-01T16:20:10.456Z",
+    "updatedAt": "2023-05-01T16:20:10.456Z"
+  }
+]
+```
+
+#### Crear un nuevo usuario
+
+```http
+POST /users
+Content-Type: application/json
+
+{
+  "nombre": "Pedro González",
+  "email": "pedro@example.com",
+  "password": "contraseña123",
+  "rol": "usuario"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c87",
+  "nombre": "Pedro González",
+  "email": "pedro@example.com",
+  "rol": "usuario",
+  "createdAt": "2023-05-02T10:15:30.789Z",
+  "updatedAt": "2023-05-02T10:15:30.789Z"
+}
+```
+
+### Clientes
+
+#### Obtener todos los clientes
+
+```http
+GET /api/clientes
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "_id": "60d21b4667d0d8992e610c88",
+    "nombre": "Ana Martínez",
+    "email": "ana@example.com",
+    "telefono": "123456789",
+    "direcciones": [
+      {
+        "_id": "60d21b4667d0d8992e610c89",
+        "calle": "Av. Principal 123",
+        "ciudad": "Lima",
+        "codigoPostal": "15001",
+        "principal": true
+      }
+    ],
+    "createdAt": "2023-05-03T09:45:20.123Z",
+    "updatedAt": "2023-05-03T09:45:20.123Z"
+  }
+]
+```
+
+#### Agregar dirección a un cliente
+
+```http
+POST /api/clientes/60d21b4667d0d8992e610c88/direcciones
+Content-Type: application/json
+
+{
+  "calle": "Calle Secundaria 456",
+  "ciudad": "Lima",
+  "codigoPostal": "15002",
+  "principal": false
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c88",
+  "nombre": "Ana Martínez",
+  "email": "ana@example.com",
+  "telefono": "123456789",
+  "direcciones": [
+    {
+      "_id": "60d21b4667d0d8992e610c89",
+      "calle": "Av. Principal 123",
+      "ciudad": "Lima",
+      "codigoPostal": "15001",
+      "principal": true
+    },
+    {
+      "_id": "60d21b4667d0d8992e610c90",
+      "calle": "Calle Secundaria 456",
+      "ciudad": "Lima",
+      "codigoPostal": "15002",
+      "principal": false
+    }
+  ],
+  "createdAt": "2023-05-03T09:45:20.123Z",
+  "updatedAt": "2023-05-03T10:30:15.456Z"
+}
+```
+
+### Productos
+
+#### Obtener productos por categoría
+
+```http
+GET /api/productos/categoria/bebidas
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "_id": "60d21b4667d0d8992e610c91",
+    "nombre": "Agua Mineral",
+    "descripcion": "Agua mineral natural sin gas",
+    "precio": 2.5,
+    "categoria": "bebidas",
+    "disponible": true,
+    "destacado": false,
+    "createdAt": "2023-05-04T11:20:30.123Z",
+    "updatedAt": "2023-05-04T11:20:30.123Z"
+  },
+  {
+    "_id": "60d21b4667d0d8992e610c92",
+    "nombre": "Refresco de Cola",
+    "descripcion": "Refresco carbonatado sabor cola",
+    "precio": 3.0,
+    "categoria": "bebidas",
+    "disponible": true,
+    "destacado": true,
+    "createdAt": "2023-05-04T11:25:45.456Z",
+    "updatedAt": "2023-05-04T11:25:45.456Z"
+  }
+]
+```
+
+#### Cambiar disponibilidad de un producto
+
+```http
+PATCH /api/productos/60d21b4667d0d8992e610c91/disponibilidad
+Content-Type: application/json
+
+{
+  "disponible": false
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c91",
+  "nombre": "Agua Mineral",
+  "descripcion": "Agua mineral natural sin gas",
+  "precio": 2.5,
+  "categoria": "bebidas",
+  "disponible": false,
+  "destacado": false,
+  "createdAt": "2023-05-04T11:20:30.123Z",
+  "updatedAt": "2023-05-04T12:15:10.789Z"
+}
+```
+
+### Pedidos
+
+#### Crear un nuevo pedido
+
+```http
+POST /api/pedidos
+Content-Type: application/json
+
+{
+  "cliente": "60d21b4667d0d8992e610c88",
+  "direccionEntrega": "60d21b4667d0d8992e610c89",
+  "productos": [
+    {
+      "producto": "60d21b4667d0d8992e610c92",
+      "cantidad": 2
+    },
+    {
+      "producto": "60d21b4667d0d8992e610c91",
+      "cantidad": 1
+    }
+  ],
+  "metodoPago": "tarjeta"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c93",
+  "cliente": "60d21b4667d0d8992e610c88",
+  "direccionEntrega": {
+    "calle": "Av. Principal 123",
+    "ciudad": "Lima",
+    "codigoPostal": "15001"
+  },
+  "productos": [
+    {
+      "producto": {
+        "_id": "60d21b4667d0d8992e610c92",
+        "nombre": "Refresco de Cola",
+        "precio": 3.0
+      },
+      "cantidad": 2,
+      "subtotal": 6.0
+    },
+    {
+      "producto": {
+        "_id": "60d21b4667d0d8992e610c91",
+        "nombre": "Agua Mineral",
+        "precio": 2.5
+      },
+      "cantidad": 1,
+      "subtotal": 2.5
+    }
+  ],
+  "total": 8.5,
+  "estado": "pendiente",
+  "metodoPago": "tarjeta",
+  "createdAt": "2023-05-05T14:30:20.123Z",
+  "updatedAt": "2023-05-05T14:30:20.123Z"
+}
+```
+
+#### Actualizar estado de un pedido
+
+```http
+PATCH /api/pedidos/60d21b4667d0d8992e610c93/estado
+Content-Type: application/json
+
+{
+  "estado": "en_proceso"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c93",
+  "estado": "en_proceso",
+  "updatedAt": "2023-05-05T15:10:45.456Z"
+}
+```
+
+### Repartidores
+
+#### Obtener repartidores disponibles
+
+```http
+GET /api/repartidores/disponibles
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "_id": "60d21b4667d0d8992e610c94",
+    "nombre": "Carlos Rodríguez",
+    "email": "carlos@example.com",
+    "telefono": "987654321",
+    "disponible": true,
+    "zonas": ["Lima Norte", "Lima Centro"],
+    "ubicacion": {
+      "latitud": -12.0464,
+      "longitud": -77.0428
+    },
+    "createdAt": "2023-05-06T09:15:30.123Z",
+    "updatedAt": "2023-05-06T09:15:30.123Z"
+  }
+]
+```
+
+#### Actualizar ubicación de un repartidor
+
+```http
+PATCH /api/repartidores/60d21b4667d0d8992e610c94/ubicacion
+Content-Type: application/json
+
+{
+  "latitud": -12.0500,
+  "longitud": -77.0450
+}
+```
+
+Respuesta:
+
+```json
+{
+  "_id": "60d21b4667d0d8992e610c94",
+  "ubicacion": {
+    "latitud": -12.0500,
+    "longitud": -77.0450
+  },
+  "updatedAt": "2023-05-06T10:20:15.456Z"
+}
+```
 
 ## Tecnologías Utilizadas
 
@@ -137,83 +525,55 @@ Este proyecto implementa una aplicación web completa utilizando el stack MEEN (
 5. Se genera una respuesta, ya sea JSON para la API o HTML renderizado con EJS para la interfaz web.
 6. La respuesta se envía al cliente.
 
-## Próximos Pasos para una Aplicación en Producción
+## Configuración de MongoDB
 
-### 1. Mejoras de Seguridad
+Este proyecto utiliza MongoDB como base de datos. A continuación se detalla cómo configurar la conexión:
 
-- **Implementar autenticación robusta**: Utilizar JWT (JSON Web Tokens) o sesiones para una autenticación completa.
-- **Añadir HTTPS**: Configurar certificados SSL para conexiones seguras.
-- **Implementar middleware de seguridad**: Usar Helmet para establecer cabeceras HTTP seguras.
-- **Validación de datos**: Implementar Joi o express-validator para validar entradas.
-- **Protección contra ataques comunes**: Configurar rate limiting, CORS, y protección contra CSRF.
+### 1. Configuración Básica
 
-### 2. Optimización de Rendimiento
+La configuración de la base de datos se encuentra en el archivo `config.js` en la raíz del proyecto:
 
-- **Implementar caché**: Utilizar Redis para cachear respuestas frecuentes.
-- **Compresión**: Añadir compresión gzip/brotli para reducir el tamaño de las respuestas.
-- **Optimización de consultas**: Mejorar las consultas a MongoDB con índices adecuados.
-- **Servir archivos estáticos eficientemente**: Configurar CDN para archivos estáticos.
-- **Implementar lazy loading**: Para componentes pesados en el frontend.
+```javascript
+module.exports = {
+    db: {
+        host: 'localhost',  // Host de MongoDB
+        port: 27017,        // Puerto estándar de MongoDB
+        name: 'test-database' // Nombre de la base de datos
+    }
+}
+```
 
-### 3. Escalabilidad
+### 2. Conexión a MongoDB
 
-- **Arquitectura de microservicios**: Dividir la aplicación en servicios independientes.
-- **Balanceo de carga**: Implementar múltiples instancias con un balanceador de carga.
-- **Contenedorización**: Utilizar Docker y Kubernetes para despliegue y escalado.
-- **Base de datos distribuida**: Configurar sharding y replicación en MongoDB.
-- **Implementar colas de mensajes**: Usar RabbitMQ o Kafka para operaciones asíncronas.
+La conexión a MongoDB se gestiona en el archivo `config/database.js` utilizando Mongoose:
 
-### 4. Monitoreo y Logging
+```javascript
+const mongoose = require('mongoose');
+const { db } = require('../config');
 
-- **Sistema de logging avanzado**: Implementar Winston o Bunyan con rotación de logs.
-- **Monitoreo en tiempo real**: Integrar herramientas como New Relic, Datadog o Prometheus.
-- **Alertas**: Configurar alertas para eventos críticos.
-- **Análisis de rendimiento**: Implementar APM (Application Performance Monitoring).
-- **Dashboards**: Crear dashboards con Grafana para visualizar métricas.
+const connectDB = async () => {
+    try {
+        const conn = await mongoose.connect(`mongodb://${db.host}:${db.port}/${db.name}`, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log(`MongoDB conectada: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Error al conectar a MongoDB: ${error.message}`);
+        process.exit(1);
+    }
+};
 
-### 5. Mejoras en el Desarrollo
+module.exports = connectDB;
+```
 
-- **Testing automatizado**: Implementar pruebas unitarias, de integración y end-to-end.
-- **CI/CD**: Configurar pipelines de integración y despliegue continuo.
-- **Documentación de API**: Implementar Swagger o similar para documentar endpoints.
-- **Versionado de API**: Añadir versionado para cambios no retrocompatibles.
-- **Migraciones de base de datos**: Implementar sistema de migraciones para cambios en esquemas.
+### 3. Uso en el Proyecto
 
-### 6. Funcionalidades Adicionales
+Para utilizar MongoDB en tu propio proyecto:
 
-- **Sistema de usuarios completo**: Registro, login, recuperación de contraseña, perfiles.
-- **Subida de archivos**: Implementar almacenamiento de archivos con AWS S3 o similar.
-- **Notificaciones**: Añadir sistema de notificaciones por email, SMS o push.
-- **Búsqueda avanzada**: Implementar Elasticsearch para búsquedas eficientes.
-- **Internacionalización**: Soporte para múltiples idiomas.
-- **Pagos**: Integración con pasarelas de pago como Stripe o PayPal.
-- **Analíticas**: Implementar seguimiento de eventos y analíticas.
-
-### 7. Ejemplos de Aplicaciones Reales que podrías construir
-
-1. **E-commerce**:
-   - Catálogo de productos con categorías y búsqueda
-   - Carrito de compras y proceso de checkout
-   - Sistema de pagos y gestión de pedidos
-   - Panel de administración para gestionar productos e inventario
-
-2. **Red Social**:
-   - Perfiles de usuario con autenticación
-   - Publicaciones y comentarios
-   - Sistema de seguimiento y notificaciones
-   - Mensajería privada entre usuarios
-
-3. **Plataforma de Contenido**:
-   - Sistema de blogs o artículos
-   - Comentarios y valoraciones
-   - Categorización y etiquetado
-   - Panel de administración para gestionar contenido
-
-4. **Aplicación de Gestión**:
-   - Dashboard con métricas y gráficos
-   - CRUD completo para entidades de negocio
-   - Generación de informes y exportación de datos
-   - Control de acceso basado en roles
+1. Asegúrate de tener MongoDB instalado y ejecutándose en tu sistema
+2. Modifica el archivo `config.js` con los datos de tu base de datos
+3. La conexión se establece automáticamente al iniciar el servidor
 
 ## Documentación Adicional
 
